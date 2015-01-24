@@ -31,6 +31,7 @@ package
 
 		private var monsterColor:int = 0xffff0000; // RED FOR DANGER!!!
 		private var monsterTimer:FlxTimer;
+		private var monsterPace:Number = 1;
 		
 		private var coinDelay:Number = 0.75;
 		private var coinTimer:FlxTimer;
@@ -74,7 +75,7 @@ package
 			add(monster);
 			
 			monsterTimer = new FlxTimer();
-			monsterTimer.start(2,1);
+			monsterTimer.start(monsterPace,1);
 			
 			
 			coin = new FlxSprite(10,10+FlxG.random()*(FlxG.height-20),ImgCoin);
@@ -139,8 +140,8 @@ package
 				
 				
 				if (monsterTimer.finished) {
-					FlxG.play(SndMonster,(FlxG.height-FlxU.getDistance(monster.getMidpoint(),avatar.getMidpoint()))/(2*FlxG.height),false,true); 
-					monsterTimer.start(2,1);
+					FlxG.play(SndMonster,(FlxG.width-FlxU.getDistance(monster.getMidpoint(),avatar.getMidpoint()))/FlxG.width,false,true); 
+					monsterTimer.start(monsterPace,1);
 				}
 			
 				if (FlxG.collide(monster,avatar)) {
