@@ -48,7 +48,7 @@ package
 			FlxG.play(SndStart);
 			
 			
-			avatar = new FlxSprite(FlxG.width*2/3,FlxG.height*2/3,ImgAvatar);
+			avatar = new FlxSprite(FlxG.width/2,FlxG.height/2,ImgAvatar);
 			avatar.color = avatarColor;
 			avatar.maxVelocity.x = avatarSpeed;
 			avatar.maxVelocity.y = avatarSpeed;
@@ -62,6 +62,11 @@ package
 			
 			
 			monster = new FlxSprite(10+FlxG.random()*(FlxG.width-20),10+FlxG.random()*(FlxG.height-20),ImgMonster);
+			
+			monster.x += 2*(FlxG.width/2-monster.x);
+			monster.y += 2*(FlxG.width/2-monster.y);
+			
+			
 			monster.color = monsterColor;
 			monster.maxVelocity.x = 10;
 			monster.maxVelocity.y = 10;
@@ -114,7 +119,7 @@ package
 			} 
 
 			if (avatarTimer.finished && avatarMoved) {
-					FlxG.play(SndLoot,1-avatarPace,false,true); 
+					FlxG.play(SndLoot,1-1/avatarPace,false,true); 
 					avatarTimer.start(1/avatarPace,1);
 			}
 			
@@ -134,7 +139,7 @@ package
 			
 			
 			if (monsterTimer.finished) {
-				FlxG.play(SndMonster,(FlxG.height-FlxU.getDistance(monster.getMidpoint(),avatar.getMidpoint()))/FlxG.height,false,true); 
+				FlxG.play(SndMonster,(FlxG.height-FlxU.getDistance(monster.getMidpoint(),avatar.getMidpoint()))/(2*FlxG.height),false,true); 
 				monsterTimer.start(1,1);
 			}
 			
