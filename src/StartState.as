@@ -11,12 +11,18 @@ package
 		
 		[Embed(source="assets/boom.mp3")] 						private var SndBoom:Class;
 		private var TxtStart:FlxText;
+		private var TxtTitle:FlxText;
 		
 		override public function create():void
 		{
 			FlxG.bgColor = 0xff101010;
 			
-			TxtStart = new FlxText(0,FlxG.height/2-70,FlxG.width,"Louder\n\nOriginal idea by Qdead\nTitle by Knodding");
+			TxtTitle = new FlxText(0,FlxG.height/2-70,FlxG.width,"Louder");
+			TxtTitle.alignment = "center";
+			TxtTitle.size = 24;
+			add(TxtTitle);
+			
+			TxtStart = new FlxText(0,FlxG.height/2-10,FlxG.width,"''Twitch Plays GGJ15''\n\nOriginal idea by Qdead\nArt & Title by Knodding\nCode & Music by Philip Tan");
 			TxtStart.alignment = "center";
 			TxtStart.size = 16;
 			add(TxtStart);
