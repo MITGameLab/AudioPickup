@@ -121,35 +121,38 @@ package
 					avatarTimer.start(0.25/avatarPace,1);
 			}
 			
-			monster.velocity.x = 0;
-			monster.velocity.y = 0;
+			if (FlxG.score > 0) {
 			
-			if(monster.x > avatar.x)
-				monster.velocity.x = -monster.maxVelocity.x;
-			else
-				monster.velocity.x = monster.maxVelocity.x;
+				monster.velocity.x = 0;
+				monster.velocity.y = 0;
+				
+				if(monster.x > avatar.x)
+					monster.velocity.x = -monster.maxVelocity.x;
+				else
+					monster.velocity.x = monster.maxVelocity.x;
+				
+				
+				if(monster.y > avatar.y)
+					monster.velocity.y = -monster.maxVelocity.y;
+				else
+					monster.velocity.y = monster.maxVelocity.y;
+				
+				
+				if (monsterTimer.finished) {
+					FlxG.play(SndMonster,(FlxG.height-FlxU.getDistance(monster.getMidpoint(),avatar.getMidpoint()))/(2*FlxG.height),false,true); 
+					monsterTimer.start(2,1);
+				}
 			
-			
-			if(monster.y > avatar.y)
-				monster.velocity.y = -monster.maxVelocity.y;
-			else
-				monster.velocity.y = monster.maxVelocity.y;
-			
-			
-			if (monsterTimer.finished) {
-				FlxG.play(SndMonster,(FlxG.height-FlxU.getDistance(monster.getMidpoint(),avatar.getMidpoint()))/(2*FlxG.height),false,true); 
-				monsterTimer.start(2,1);
+				if (FlxG.collide(monster,avatar)) {
+					FlxG.switchState(new StartState);
+				}
 			}
+
 			
 //			if (coinTimer.finished) {
 //				FlxG.play(SndCoin,(FlxG.height-FlxU.getDistance(coin.getMidpoint(),avatar.getMidpoint()))/(3*FlxG.height),false,true); 
 //				coinTimer.start(coinDelay,1);
 //			}
-			
-			if (FlxG.collide(monster,avatar)) {
-				FlxG.switchState(new StartState);
-			}
-
 			
 			if (FlxG.collide(coin,avatar)) {
 				coin.x = 10+FlxG.random()*(FlxG.width-20);
@@ -166,7 +169,7 @@ package
 					monster.color = FlxU.makeColor(FlxU.getRGBA(monsterColor)[0]*(10-FlxG.score)/5,FlxU.getRGBA(monsterColor)[1]*(10-FlxG.score)/5,FlxU.getRGBA(monsterColor)[2]*(10-FlxG.score)/5);
 					coin.color = FlxU.makeColor(FlxU.getRGBA(coinColor)[0]*(10-FlxG.score)/5,FlxU.getRGBA(coinColor)[1]*(10-FlxG.score)/5,FlxU.getRGBA(coinColor)[2]*(10-FlxG.score)/5);
 					
-					if (FlxG.score == 5) 
+					if (FlxG.score == 4) 
 						TxtDescription.text = "Good luck!";
 					
 					if (FlxG.score > 10) {
