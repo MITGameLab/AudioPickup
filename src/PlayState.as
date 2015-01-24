@@ -15,9 +15,9 @@ package
 		[Embed(source="assets/pickup.mp3")] 					private var SndPickup:Class;
 		
 		
-		[Embed(source="assets/monster.png")] 					private	var ImgMonster:Class;
-		[Embed(source="assets/avatar.png")] 					private	var ImgAvatar:Class;
-		[Embed(source="assets/coin.png")] 						private	var ImgCoin:Class;
+		[Embed(source="assets/SnowMen2Opacity.png")] 					private	var ImgMonster:Class;
+		[Embed(source="assets/CodaRoundTeal.png")] 					private	var ImgAvatar:Class;
+		[Embed(source="assets/CodaTeal2.png")] 						private	var ImgCoin:Class;
 		
 		private var TxtDescription:FlxText;
 		public var avatar:FlxSprite;
@@ -29,7 +29,7 @@ package
 		private var avatarTimer:FlxTimer;
 		private var avatarPace:Number = 1;
 
-		private var monsterColor:int = 0xffff0000; // RED FOR DANGER!!!
+		private var monsterColor:int = 0xffffffff;
 		private var monsterTimer:FlxTimer;
 		private var monsterPace:Number = 1;
 		
@@ -170,8 +170,6 @@ package
 					monster.color = FlxU.makeColor(FlxU.getRGBA(monsterColor)[0]*(10-FlxG.score)/5,FlxU.getRGBA(monsterColor)[1]*(10-FlxG.score)/5,FlxU.getRGBA(monsterColor)[2]*(10-FlxG.score)/5);
 					coin.color = FlxU.makeColor(FlxU.getRGBA(coinColor)[0]*(10-FlxG.score)/5,FlxU.getRGBA(coinColor)[1]*(10-FlxG.score)/5,FlxU.getRGBA(coinColor)[2]*(10-FlxG.score)/5);
 					
-					if (FlxG.score == 4) 
-						TxtDescription.text = "Good luck!";
 					
 					if (FlxG.score > 10) {
 						avatar.color = 0x00000000;
@@ -180,9 +178,11 @@ package
 						
 					}
 					
-					if (FlxG.score > 7) {
+					if (FlxG.score > 4) 
+						TxtDescription.text = "Good luck!";
+					else if (FlxG.score > 7) 
 						TxtDescription.text = "Annoyance level: " + FlxG.score.toString();
-					}
+					
 				}
 			}
 
