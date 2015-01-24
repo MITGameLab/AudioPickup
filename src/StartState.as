@@ -24,7 +24,7 @@ package
 			FlxG.score = 0;
 			
 			FlxG.flash();
-			FlxG.play(SndBoom);
+			FlxG.play(SndBoom,0.5);
 		}
 
 		

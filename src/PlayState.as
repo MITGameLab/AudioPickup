@@ -8,7 +8,7 @@ package
 	public class PlayState extends FlxState
 	{
 		
-		[Embed(source="assets/start.mp3")] 						private var SndStart:Class;
+		//[Embed(source="assets/start.mp3")] 						private var SndStart:Class;
 		[Embed(source="assets/monster.mp3")] 					private var SndMonster:Class;
 		[Embed(source="assets/loot.mp3")] 						private var SndLoot:Class;
 		[Embed(source="assets/coin.mp3")] 						private var SndCoin:Class;
@@ -34,44 +34,23 @@ package
 		
 		private var coinDelay:Number = 0.75;
 		private var coinTimer:FlxTimer;
-		
-		
-		private function extractRed(c:uint):uint {
-			return (( c >> 16 ) & 0xFF);
-		}
-		 
-		private function extractGreen(c:uint):uint {
-			return ( (c >> 8) & 0xFF );
-		}
-		 
-		private function extractBlue(c:uint):uint {
-			return ( c & 0xFF );
-		}
-
-		private function combineRGB(r:uint,g:uint,b:uint):uint {
-			return ( ( r << 16 ) | ( g << 8 ) | b );
-		}
-
-		
-		
-		
+		private var coinColor:int = 0xffffffff;
 		
 		
 				
 		override public function create():void
 		{
 			FlxG.bgColor = 0xff101010;
-
 			
 			TxtDescription = new FlxText(20,FlxG.height/2-70,FlxG.width-40,"''A silent game where you gain more sound by finding items throughout the game''\n- Qdead");
 			TxtDescription.alignment = "center";
 			TxtDescription.size = 16;
 			add(TxtDescription);			
 			
-			FlxG.play(SndStart);
+			//FlxG.play(SndStart);
 			
 			
-			avatar = new FlxSprite(FlxG.width/2,FlxG.height/2,ImgAvatar);
+			avatar = new FlxSprite(FlxG.width/2,FlxG.height*2/3,ImgAvatar);
 			avatar.color = avatarColor;
 			avatar.maxVelocity.x = avatarSpeed;
 			avatar.maxVelocity.y = avatarSpeed;
@@ -95,7 +74,7 @@ package
 			add(monster);
 			
 			monsterTimer = new FlxTimer();
-			monsterTimer.start(1,1);
+			monsterTimer.start(2,1);
 			
 			
 			coin = new FlxSprite(10,10+FlxG.random()*(FlxG.height-20),ImgCoin);
@@ -105,8 +84,8 @@ package
 			
 			add(coin);
 			
-			coinTimer = new FlxTimer();
-			coinTimer.start(coinDelay,1);
+//			coinTimer = new FlxTimer();
+//			coinTimer.start(coinDelay,1);
 		}
 
 		
@@ -138,7 +117,7 @@ package
 			} 
 
 			if (avatarTimer.finished && avatarMoved) {
-					FlxG.play(SndLoot,0.5/avatarPace,false,true); 
+					FlxG.play(SndLoot,5*(1-avatarPace),false,true); 
 					avatarTimer.start(0.25/avatarPace,1);
 			}
 			
@@ -159,13 +138,13 @@ package
 			
 			if (monsterTimer.finished) {
 				FlxG.play(SndMonster,(FlxG.height-FlxU.getDistance(monster.getMidpoint(),avatar.getMidpoint()))/(2*FlxG.height),false,true); 
-				monsterTimer.start(1,1);
+				monsterTimer.start(2,1);
 			}
 			
-			if (coinTimer.finished) {
-				FlxG.play(SndCoin,(FlxG.height-FlxU.getDistance(coin.getMidpoint(),avatar.getMidpoint()))/(2*FlxG.height),false,true); 
-				coinTimer.start(coinDelay,1);
-			}
+//			if (coinTimer.finished) {
+//				FlxG.play(SndCoin,(FlxG.height-FlxU.getDistance(coin.getMidpoint(),avatar.getMidpoint()))/(3*FlxG.height),false,true); 
+//				coinTimer.start(coinDelay,1);
+//			}
 			
 			if (FlxG.collide(monster,avatar)) {
 				FlxG.switchState(new StartState);
@@ -185,12 +164,20 @@ package
 					
 					avatar.color = FlxU.makeColor(FlxU.getRGBA(avatarColor)[0]*(10-FlxG.score)/5,FlxU.getRGBA(avatarColor)[1]*(10-FlxG.score)/5,FlxU.getRGBA(avatarColor)[2]*(10-FlxG.score)/5);
 					monster.color = FlxU.makeColor(FlxU.getRGBA(monsterColor)[0]*(10-FlxG.score)/5,FlxU.getRGBA(monsterColor)[1]*(10-FlxG.score)/5,FlxU.getRGBA(monsterColor)[2]*(10-FlxG.score)/5);
+					coin.color = FlxU.makeColor(FlxU.getRGBA(coinColor)[0]*(10-FlxG.score)/5,FlxU.getRGBA(coinColor)[1]*(10-FlxG.score)/5,FlxU.getRGBA(coinColor)[2]*(10-FlxG.score)/5);
+					
+					if (FlxG.score == 5) 
+						TxtDescription.text = "Good luck!";
 					
 					if (FlxG.score > 10) {
 						avatar.color = 0x00000000;
 						monster.color = 0x00000000;
+						coin.color = 0x00000000;
 						
-						TxtDescription.text = "The game is primarily visual, but is also playable by visually impaired players.\nGGJ 2015 Diversifier";
+					}
+					
+					if (FlxG.score > 7) {
+						TxtDescription.text = "Annoyance level: " + FlxG.score.toString();
 					}
 				}
 			}
