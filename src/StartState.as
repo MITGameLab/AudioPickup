@@ -9,6 +9,7 @@ package
 	{
 		
 		
+		[Embed(source="assets/boom.mp3")] 						private var SndBoom:Class;
 		private var TxtStart:FlxText;
 		
 		override public function create():void
@@ -21,6 +22,7 @@ package
 			add(TxtStart);
 			
 			FlxG.flash();
+			FlxG.play(SndBoom);
 		}
 
 		

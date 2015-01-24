@@ -9,9 +9,10 @@ package
 	{
 		
 		[Embed(source="assets/start.mp3")] 						private var SndStart:Class;
-		[Embed(source="assets/footstep.mp3")] 					private var SndFootstep:Class;
+		[Embed(source="assets/monster.mp3")] 					private var SndMonster:Class;
 		[Embed(source="assets/loot.mp3")] 						private var SndLoot:Class;
 		[Embed(source="assets/coin.mp3")] 						private var SndCoin:Class;
+		[Embed(source="assets/pickup.mp3")] 					private var SndPickup:Class;
 		
 		
 		[Embed(source="assets/monster.png")] 					private	var ImgMonster:Class;
@@ -24,9 +25,9 @@ package
 		public var coin:FlxSprite;
 		
 		private var avatarColor:int = 0xffffffff;
-		private var avatarHealth:int = 100;
+		private var avatarSpeed:int = 60;
 		private var avatarTimer:FlxTimer;
-		private var avatarPace:Number = 0.1;
+		private var avatarPace:Number = 1;
 
 		private var monsterColor:int = 0xffff0000; // RED FOR DANGER!!!
 		private var monsterTimer:FlxTimer;
@@ -49,16 +50,15 @@ package
 			
 			avatar = new FlxSprite(FlxG.width*2/3,FlxG.height*2/3,ImgAvatar);
 			avatar.color = avatarColor;
-			avatar.maxVelocity.x = 60;
-			avatar.maxVelocity.y = 60;
+			avatar.maxVelocity.x = avatarSpeed;
+			avatar.maxVelocity.y = avatarSpeed;
 			avatar.acceleration.y = 0;
 			avatar.acceleration.x = 0;
-			avatar.health = avatarHealth;
 			
 			add(avatar);
 			
 			avatarTimer = new FlxTimer();
-			avatarTimer.start(avatarPace,1);
+			avatarTimer.start(1/avatarPace,1);
 			
 			
 			monster = new FlxSprite(10+FlxG.random()*(FlxG.width-20),10+FlxG.random()*(FlxG.height-20),ImgMonster);
@@ -76,6 +76,8 @@ package
 			
 			coin = new FlxSprite(10+FlxG.random()*(FlxG.width-20),10+FlxG.random()*(FlxG.height-20),ImgCoin);
 			coin.color = 0xffffffff;
+			
+			coin.moves = false;
 			
 			add(coin);
 			
@@ -112,8 +114,8 @@ package
 			} 
 
 			if (avatarTimer.finished && avatarMoved) {
-					FlxG.play(SndLoot,avatarPace,false,true); 
-					avatarTimer.start(avatarPace,1);
+					FlxG.play(SndLoot,1-avatarPace,false,true); 
+					avatarTimer.start(1/avatarPace,1);
 			}
 			
 			monster.velocity.x = 0;
@@ -132,7 +134,7 @@ package
 			
 			
 			if (monsterTimer.finished) {
-				FlxG.play(SndFootstep,(FlxG.height-FlxU.getDistance(monster.getMidpoint(),avatar.getMidpoint()))/FlxG.height,false,true); 
+				FlxG.play(SndMonster,(FlxG.height-FlxU.getDistance(monster.getMidpoint(),avatar.getMidpoint()))/FlxG.height,false,true); 
 				monsterTimer.start(1,1);
 			}
 			
@@ -143,6 +145,21 @@ package
 				coinTimer.start(coinDelay,1);
 			}
 			
+			if (FlxG.collide(monster,avatar)) {
+				FlxG.switchState(new StartState);
+			}
+
+			
+			if (FlxG.collide(coin,avatar)) {
+				coin.x = 10+FlxG.random()*(FlxG.width-20);
+				coin.y = 10+FlxG.random()*(FlxG.height-20);
+				FlxG.play(SndPickup);
+				FlxG.score++;
+				avatarPace*=0.9;
+				avatar.maxVelocity.x = avatarSpeed*avatarPace;
+				avatar.maxVelocity.y = avatarSpeed*avatarPace;
+			}
+
 			
 			super.update();
 			
