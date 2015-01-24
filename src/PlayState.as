@@ -34,13 +34,36 @@ package
 		
 		private var coinDelay:Number = 0.75;
 		private var coinTimer:FlxTimer;
+		
+		
+		private function extractRed(c:uint):uint {
+			return (( c >> 16 ) & 0xFF);
+		}
+		 
+		private function extractGreen(c:uint):uint {
+			return ( (c >> 8) & 0xFF );
+		}
+		 
+		private function extractBlue(c:uint):uint {
+			return ( c & 0xFF );
+		}
+
+		private function combineRGB(r:uint,g:uint,b:uint):uint {
+			return ( ( r << 16 ) | ( g << 8 ) | b );
+		}
+
+		
+		
+		
+		
+		
 				
 		override public function create():void
 		{
 			FlxG.bgColor = 0xff101010;
 
 			
-			TxtDescription = new FlxText(20,FlxG.height/2-70,FlxG.width-40,"''A silent game where you gain more sound by finding items throughout the game''\n\nEagle Ear: The game is primarily visual, but is also playable by visually impaired players.");
+			TxtDescription = new FlxText(20,FlxG.height/2-70,FlxG.width-40,"''A silent game where you gain more sound by finding items throughout the game''\n- Qdead");
 			TxtDescription.alignment = "center";
 			TxtDescription.size = 16;
 			add(TxtDescription);			
@@ -61,11 +84,7 @@ package
 			avatarTimer.start(1/avatarPace,1);
 			
 			
-			monster = new FlxSprite(10+FlxG.random()*(FlxG.width-20),10+FlxG.random()*(FlxG.height-20),ImgMonster);
-			
-			monster.x += 2*(FlxG.width/2-monster.x);
-			monster.y += 2*(FlxG.width/2-monster.y);
-			
+			monster = new FlxSprite(FlxG.width+30,10+FlxG.random()*(FlxG.height-20),ImgMonster);
 			
 			monster.color = monsterColor;
 			monster.maxVelocity.x = 10;
@@ -79,9 +98,9 @@ package
 			monsterTimer.start(1,1);
 			
 			
-			coin = new FlxSprite(10+FlxG.random()*(FlxG.width-20),10+FlxG.random()*(FlxG.height-20),ImgCoin);
+			coin = new FlxSprite(10,10+FlxG.random()*(FlxG.height-20),ImgCoin);
 			coin.color = 0xffffffff;
-			
+						
 			coin.moves = false;
 			
 			add(coin);
@@ -119,8 +138,8 @@ package
 			} 
 
 			if (avatarTimer.finished && avatarMoved) {
-					FlxG.play(SndLoot,1-1/avatarPace,false,true); 
-					avatarTimer.start(1/avatarPace,1);
+					FlxG.play(SndLoot,0.5/avatarPace,false,true); 
+					avatarTimer.start(0.25/avatarPace,1);
 			}
 			
 			monster.velocity.x = 0;
@@ -143,10 +162,8 @@ package
 				monsterTimer.start(1,1);
 			}
 			
-			
-			
 			if (coinTimer.finished) {
-				FlxG.play(SndCoin,(FlxG.height-FlxU.getDistance(coin.getMidpoint(),avatar.getMidpoint()))/FlxG.height,false,true); 
+				FlxG.play(SndCoin,(FlxG.height-FlxU.getDistance(coin.getMidpoint(),avatar.getMidpoint()))/(2*FlxG.height),false,true); 
 				coinTimer.start(coinDelay,1);
 			}
 			
@@ -158,11 +175,24 @@ package
 			if (FlxG.collide(coin,avatar)) {
 				coin.x = 10+FlxG.random()*(FlxG.width-20);
 				coin.y = 10+FlxG.random()*(FlxG.height-20);
-				FlxG.play(SndPickup);
 				FlxG.score++;
+				FlxG.play(SndPickup);
 				avatarPace*=0.9;
 				avatar.maxVelocity.x = avatarSpeed*avatarPace;
 				avatar.maxVelocity.y = avatarSpeed*avatarPace;
+				
+				if (FlxG.score > 5) {
+					
+					avatar.color = FlxU.makeColor(FlxU.getRGBA(avatarColor)[0]*(10-FlxG.score)/5,FlxU.getRGBA(avatarColor)[1]*(10-FlxG.score)/5,FlxU.getRGBA(avatarColor)[2]*(10-FlxG.score)/5);
+					monster.color = FlxU.makeColor(FlxU.getRGBA(monsterColor)[0]*(10-FlxG.score)/5,FlxU.getRGBA(monsterColor)[1]*(10-FlxG.score)/5,FlxU.getRGBA(monsterColor)[2]*(10-FlxG.score)/5);
+					
+					if (FlxG.score > 10) {
+						avatar.color = 0x00000000;
+						monster.color = 0x00000000;
+						
+						TxtDescription.text = "The game is primarily visual, but is also playable by visually impaired players.\nGGJ 2015 Diversifier";
+					}
+				}
 			}
 
 			

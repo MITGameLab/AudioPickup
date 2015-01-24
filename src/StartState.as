@@ -21,6 +21,8 @@ package
 			TxtStart.size = 16;
 			add(TxtStart);
 			
+			FlxG.score = 0;
+			
 			FlxG.flash();
 			FlxG.play(SndBoom);
 		}
