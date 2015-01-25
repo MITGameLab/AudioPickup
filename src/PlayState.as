@@ -20,6 +20,8 @@ package
 		[Embed(source="assets/SnowMen2Opacity.png")] 			private	var ImgMonster:Class;
 		[Embed(source="assets/CodaRoundTeal.png")] 				private	var ImgAvatar:Class;
 		[Embed(source="assets/CodaTeal2.png")] 					private	var ImgCoin:Class;
+		[Embed(source="assets/Boots1.png")] 					private	var ImgBoots:Class;
+
 		
 		private var TxtDescription:FlxText;
 		private var TxtScore:FlxText;
@@ -40,7 +42,7 @@ package
 
 		private var coinTimer:FlxTimer;
 		private var coinColor:int = 0xffffffff;
-		
+		private var coinType:int = 0;
 		
 				
 		override public function create():void
@@ -186,31 +188,42 @@ package
 				coin.y = 10+FlxG.random()*(FlxG.height-20);
 				FlxG.score++;
 				
-				FlxG.play(SndPickup);
-				avatarPace*=0.9;
-				avatar.maxVelocity.x = avatarSpeed*avatarPace;
-				avatar.maxVelocity.y = avatarSpeed*avatarPace;
 				
-				if (FlxG.score > 5) {
+				
+				if (coinType == 0) 	
+					avatarPace*=0.9;
+				else if (coinType == 1)
+					avatarPace=1;
 					
+				FlxG.play(SndPickup);
+				avatar.maxVelocity.x = avatarSpeed*avatarPace;
+				avatar.maxVelocity.y = avatarSpeed*avatarPace;	
+
+				if (FlxG.score > 4)
+					TxtDescription.text = "''Items could give you a sonic attack.''\n- Knod";	
+				if (FlxG.score > 5) {
 					avatar.color = FlxU.makeColor(FlxU.getRGBA(avatarColor)[0]*(10-FlxG.score)/5,FlxU.getRGBA(avatarColor)[1]*(10-FlxG.score)/5,FlxU.getRGBA(avatarColor)[2]*(10-FlxG.score)/5);
 					monster.color = FlxU.makeColor(FlxU.getRGBA(monsterColor)[0]*(10-FlxG.score)/5,FlxU.getRGBA(monsterColor)[1]*(10-FlxG.score)/5,FlxU.getRGBA(monsterColor)[2]*(10-FlxG.score)/5);
 					coin.color = FlxU.makeColor(FlxU.getRGBA(coinColor)[0]*(10-FlxG.score)/5,FlxU.getRGBA(coinColor)[1]*(10-FlxG.score)/5,FlxU.getRGBA(coinColor)[2]*(10-FlxG.score)/5);
-					
-					
-					if (FlxG.score > 10) {
-						avatar.color = 0x00000000;
-						monster.color = 0x00000000;
-						coin.color = 0x00000000;
-						
-					}
-					
-					if (FlxG.score > 4) 
-						TxtDescription.text = "''Items could give you a sonic attack.''\n- Knod";
-					else if (FlxG.score > 7) 
-						TxtDescription.text = "Speed could be another item advantage.\n\n- Knod"
-					
 				}
+				if (FlxG.score > 7) {
+					TxtDescription.text = "Speed could be another item advantage.\n\n- Knod"
+					if (FlxG.random() > 0.8) {
+						coin.loadGraphic(ImgBoots);
+						coinType = 1;
+					} else {
+						coin.loadGraphic(ImgCoin);
+						coinType = 0;
+					}
+
+				}
+				if (FlxG.score > 10) {
+					avatar.color = 0x00000000;
+					monster.color = 0x00000000;
+					coin.color = 0x00000000;
+				}
+	
+				
 			}
 
 			
