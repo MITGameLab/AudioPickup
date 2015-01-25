@@ -17,9 +17,9 @@ package
 		[Embed(source="assets/no.mp3")] 						private var SndNo:Class;
 		
 		
-		[Embed(source="assets/SnowMen2Opacity.png")] 					private	var ImgMonster:Class;
-		[Embed(source="assets/CodaRoundTeal.png")] 					private	var ImgAvatar:Class;
-		[Embed(source="assets/CodaTeal2.png")] 						private	var ImgCoin:Class;
+		[Embed(source="assets/SnowMen2Opacity.png")] 			private	var ImgMonster:Class;
+		[Embed(source="assets/CodaRoundTeal.png")] 				private	var ImgAvatar:Class;
+		[Embed(source="assets/CodaTeal2.png")] 					private	var ImgCoin:Class;
 		
 		private var TxtDescription:FlxText;
 		private var TxtScore:FlxText;
@@ -37,7 +37,7 @@ package
 		private var monsterTimer:FlxTimer;
 		private var monsterPace:Number = 1;
 		
-		private var coinDelay:Number = 0.75;
+
 		private var coinTimer:FlxTimer;
 		private var coinColor:int = 0xffffffff;
 		
@@ -95,8 +95,8 @@ package
 			
 			add(coin);
 			
-//			coinTimer = new FlxTimer();
-//			coinTimer.start(coinDelay,1);
+			coinTimer = new FlxTimer();
+			coinTimer.start(0.1,1);
 		}
 
 		
@@ -172,10 +172,12 @@ package
 			}	
 			
 			
-//			if (coinTimer.finished) {
-//				FlxG.play(SndCoin,(FlxG.height-FlxU.getDistance(coin.getMidpoint(),avatar.getMidpoint()))/(3*FlxG.height),false,true); 
-//				coinTimer.start(coinDelay,1);
-//			}
+			if (coinTimer.finished) {
+				
+				
+				FlxG.play(SndCoin,(FlxG.height-FlxU.getDistance(coin.getMidpoint(),avatar.getMidpoint())),false,true); 
+				coinTimer.start(2*FlxU.getDistance(coin.getMidpoint(),avatar.getMidpoint())/FlxG.height,1);
+			}
 			
 			TxtScore.text="Score: "+FlxG.score;
 			
