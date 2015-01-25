@@ -13,6 +13,8 @@ package
 		[Embed(source="assets/loot.mp3")] 						private var SndLoot:Class;
 		[Embed(source="assets/coin.mp3")] 						private var SndCoin:Class;
 		[Embed(source="assets/pickup.mp3")] 					private var SndPickup:Class;
+		[Embed(source="assets/push.mp3")] 						private var SndPush:Class;
+		[Embed(source="assets/no.mp3")] 						private var SndNo:Class;
 		
 		
 		[Embed(source="assets/SnowMen2Opacity.png")] 					private	var ImgMonster:Class;
@@ -20,6 +22,8 @@ package
 		[Embed(source="assets/CodaTeal2.png")] 						private	var ImgCoin:Class;
 		
 		private var TxtDescription:FlxText;
+		private var TxtScore:FlxText;
+		
 		public var avatar:FlxSprite;
 		public var monster:FlxSprite;
 		public var coin:FlxSprite;
@@ -47,6 +51,12 @@ package
 			TxtDescription.alignment = "center";
 			TxtDescription.size = 16;
 			add(TxtDescription);			
+			
+			
+			TxtScore = new FlxText(10,10,300,"Score: 0");
+			TxtScore.alignment = "left";
+			TxtScore.size = 16;
+			add(TxtScore);			
 			
 			//FlxG.play(SndStart);
 			
@@ -150,15 +160,30 @@ package
 			}
 
 			
+			if (FlxG.keys.justPressed("SPACE")) {
+				if (FlxG.score > 0) {
+					monster.x = FlxG.width+30;
+					monster.y = 10+FlxG.random()*(FlxG.height-20);
+					FlxG.score--;
+					FlxG.play(SndPush);
+				} else {
+					FlxG.play(SndNo);
+				}
+			}	
+			
+			
 //			if (coinTimer.finished) {
 //				FlxG.play(SndCoin,(FlxG.height-FlxU.getDistance(coin.getMidpoint(),avatar.getMidpoint()))/(3*FlxG.height),false,true); 
 //				coinTimer.start(coinDelay,1);
 //			}
 			
+			TxtScore.text="Score: "+FlxG.score;
+			
 			if (FlxG.collide(coin,avatar)) {
 				coin.x = 10+FlxG.random()*(FlxG.width-20);
 				coin.y = 10+FlxG.random()*(FlxG.height-20);
 				FlxG.score++;
+				
 				FlxG.play(SndPickup);
 				avatarPace*=0.9;
 				avatar.maxVelocity.x = avatarSpeed*avatarPace;
@@ -179,13 +204,14 @@ package
 					}
 					
 					if (FlxG.score > 4) 
-						TxtDescription.text = "Good luck!";
+						TxtDescription.text = "''Items could give you a sonic attack.''\n- Knod";
 					else if (FlxG.score > 7) 
-						TxtDescription.text = "Annoyance level: " + FlxG.score.toString();
+						TxtDescription.text = "Speed could be another item advantage.\n\n- Knod"
 					
 				}
 			}
 
+			
 			
 			super.update();
 			

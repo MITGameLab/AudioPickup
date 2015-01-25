@@ -22,7 +22,7 @@ package
 			TxtTitle.size = 24;
 			add(TxtTitle);
 			
-			TxtStart = new FlxText(0,FlxG.height/2-10,FlxG.width,"''Twitch Plays GGJ15''\n\nOriginal idea by Qdead\nArt & Title by Knodding\nCode & Music by Philip Tan");
+			TxtStart = new FlxText(0,FlxG.height/2-10,FlxG.width,"''Twitch Plays GGJ15''\n\nOriginal idea by William Färlin (Qdead)\nArt & Title by Knod\nCode & Music by Philip Tan");
 			TxtStart.alignment = "center";
 			TxtStart.size = 16;
 			add(TxtStart);
