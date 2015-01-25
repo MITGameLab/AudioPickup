@@ -42,6 +42,7 @@ package
 		private var avatarSpeed:int = 60;
 		private var avatarTimer:FlxTimer;
 		private var avatarPace:Number = 1;
+		private var avatarDistance:Number = 0;
 
 		private var monsterColor:int = 0xffffffff;
 		private var monsterTimer:FlxTimer;
@@ -87,8 +88,8 @@ package
 			monster = new FlxSprite(FlxG.width+30,10+FlxG.random()*(FlxG.height-20),ImgMonster);
 			
 			monster.color = monsterColor;
-			monster.maxVelocity.x = 10;
-			monster.maxVelocity.y = 10;
+			monster.maxVelocity.x = 5;
+			monster.maxVelocity.y = 5;
 			monster.acceleration.y = 0;
 			monster.acceleration.x = 0;
 			
@@ -140,8 +141,12 @@ package
 			} 
 
 			if (avatarTimer.finished && avatarMoved) {
+				if (FlxU.getDistance(coin.getMidpoint(),avatar.getMidpoint()) > avatarDistance)
+					FlxG.play(SndNo,2*(1-avatarPace),false,true);
+				else
 					FlxG.play(SndLoot,2*(1-avatarPace),false,true); 
-					avatarTimer.start(0.25/avatarPace,1);
+				avatarDistance = FlxU.getDistance(coin.getMidpoint(),avatar.getMidpoint());
+				avatarTimer.start(0.25/avatarPace,1);
 			}
 			
 			if (FlxG.score > 0) {
@@ -179,7 +184,7 @@ package
 				}
 			
 				if (FlxG.collide(monster,avatar)) {
-					FlxG.switchState(new StartState);
+					FlxG.switchState(new EndState);
 				}
 			}
 

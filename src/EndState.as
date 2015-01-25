@@ -5,7 +5,7 @@ package
 	import org.flixel.*;
 
 	
-	public class StartState extends FlxState
+	public class EndState extends FlxState
 	{
 		
 		
@@ -17,12 +17,12 @@ package
 		{
 			FlxG.bgColor = 0xff101010;
 			
-			TxtTitle = new FlxText(0,FlxG.height/2-70,FlxG.width,"Louder");
+			TxtTitle = new FlxText(0,FlxG.height/2-70,FlxG.width,"Game Over");
 			TxtTitle.alignment = "center";
 			TxtTitle.size = 24;
 			add(TxtTitle);
 			
-			TxtStart = new FlxText(0,FlxG.height/2-10,FlxG.width,"''Twitch Plays GGJ15''\n\nOriginal idea by William Färlin (Qdead)\nArt & Title by Knod\nCode & Music by Philip Tan");
+			TxtStart = new FlxText(0,FlxG.height/2-10,FlxG.width,"Final Score: " + FlxG.score);
 			TxtStart.alignment = "center";
 			TxtStart.size = 16;
 			add(TxtStart);
@@ -30,7 +30,7 @@ package
 			FlxG.score = 0;
 			
 			FlxG.flash();
-			//FlxG.play(SndBoom,0.5);
+			FlxG.play(SndBoom,0.5);
 		}
 
 		
@@ -39,8 +39,8 @@ package
 		{
 
 			 
-			if (FlxG.keys.SPACE || FlxG.mouse.pressed() || FlxG.mouse.justPressed() || FlxG.mouse.justReleased()) {
-				FlxG.switchState(new InstrState1);
+			if (FlxG.mouse.pressed() || FlxG.mouse.justPressed() || FlxG.mouse.justReleased()) {
+				FlxG.switchState(new StartState);
 			}
 			
 			super.update();
