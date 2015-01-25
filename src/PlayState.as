@@ -9,12 +9,20 @@ package
 	{
 		
 		//[Embed(source="assets/start.mp3")] 						private var SndStart:Class;
-		[Embed(source="assets/monster.mp3")] 					private var SndMonster:Class;
 		[Embed(source="assets/loot.mp3")] 						private var SndLoot:Class;
-		[Embed(source="assets/coin.mp3")] 						private var SndCoin:Class;
 		[Embed(source="assets/pickup.mp3")] 					private var SndPickup:Class;
 		[Embed(source="assets/push.mp3")] 						private var SndPush:Class;
 		[Embed(source="assets/no.mp3")] 						private var SndNo:Class;
+		
+		[Embed(source="assets/monsterll.mp3")] 					private var SndMonsterLL:Class;
+		[Embed(source="assets/monsterlh.mp3")] 					private var SndMonsterLH:Class;
+		[Embed(source="assets/monsterrl.mp3")] 					private var SndMonsterRL:Class;
+		[Embed(source="assets/monsterrh.mp3")] 					private var SndMonsterRH:Class;
+		
+		[Embed(source="assets/coinll.mp3")] 						private var SndCoinLL:Class;
+		[Embed(source="assets/coinlh.mp3")] 						private var SndCoinLH:Class;
+		[Embed(source="assets/coinrl.mp3")] 						private var SndCoinRL:Class;
+		[Embed(source="assets/coinrh.mp3")] 						private var SndCoinRH:Class;
 		
 		
 		[Embed(source="assets/SnowMen2Opacity.png")] 			private	var ImgMonster:Class;
@@ -108,6 +116,8 @@ package
 		override public function update():void
 		{
 			var avatarMoved:Boolean = false;
+			var coinVolume:Number;
+			var monsterVolume:Number;
 			
 			avatar.velocity.x = 0;
 			avatar.velocity.y = 0;
@@ -130,7 +140,7 @@ package
 			} 
 
 			if (avatarTimer.finished && avatarMoved) {
-					FlxG.play(SndLoot,5*(1-avatarPace),false,true); 
+					FlxG.play(SndLoot,2*(1-avatarPace),false,true); 
 					avatarTimer.start(0.25/avatarPace,1);
 			}
 			
@@ -152,7 +162,19 @@ package
 				
 				
 				if (monsterTimer.finished) {
-					FlxG.play(SndMonster,(FlxG.width-FlxU.getDistance(monster.getMidpoint(),avatar.getMidpoint()))/FlxG.width,false,true); 
+					
+					monsterVolume = (FlxG.width-FlxU.getDistance(monster.getMidpoint(),avatar.getMidpoint()))/FlxG.width;
+					if (monster.x < avatar.x) {
+						if (monster.y < avatar.y)
+							FlxG.play(SndMonsterLH,monsterVolume,false,true); 
+						else
+							FlxG.play(SndMonsterLL,monsterVolume,false,true); 
+					} else { 
+						if (monster.y < avatar.y)
+							FlxG.play(SndMonsterRH,monsterVolume,false,true); 
+						else
+							FlxG.play(SndMonsterRL,monsterVolume,false,true); 
+					}
 					monsterTimer.start(monsterPace,1);
 				}
 			
@@ -175,9 +197,18 @@ package
 			
 			
 			if (coinTimer.finished) {
-				
-				
-				FlxG.play(SndCoin,(FlxG.height-FlxU.getDistance(coin.getMidpoint(),avatar.getMidpoint())),false,true); 
+				coinVolume = 3*(FlxG.height-FlxU.getDistance(coin.getMidpoint(),avatar.getMidpoint()))/FlxG.height;
+				if (coin.x < avatar.x) {
+					if (coin.y < avatar.y)
+						FlxG.play(SndCoinLH,coinVolume,false,true); 
+					else
+						FlxG.play(SndCoinLL,coinVolume,false,true); 
+				} else { 
+					if (coin.y < avatar.y)
+						FlxG.play(SndCoinRH,coinVolume,false,true); 
+					else
+						FlxG.play(SndCoinRL,coinVolume,false,true); 
+				}
 				coinTimer.start(2*FlxU.getDistance(coin.getMidpoint(),avatar.getMidpoint())/FlxG.height,1);
 			}
 			
@@ -218,9 +249,9 @@ package
 
 				}
 				if (FlxG.score > 10) {
-					avatar.color = 0x00000000;
-					monster.color = 0x00000000;
-					coin.color = 0x00000000;
+					avatar.color = FlxG.bgColor;
+					monster.color = FlxG.bgColor;
+					coin.color = FlxG.bgColor;
 				}
 	
 				
