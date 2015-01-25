@@ -28,6 +28,8 @@ package
 		[Embed(source="assets/SnowMen2Opacity.png")] 			private	var ImgMonster:Class;
 		[Embed(source="assets/CodaRoundTeal.png")] 				private	var ImgAvatar:Class;
 		[Embed(source="assets/CodaTeal2.png")] 					private	var ImgCoin:Class;
+		[Embed(source="assets/Ping2.png")] 						private	var ImgPing:Class;
+		[Embed(source="assets/SonicWhite.png")] 				private	var ImgBoom:Class;
 		[Embed(source="assets/Boots1.png")] 					private	var ImgBoots:Class;
 
 		
@@ -37,6 +39,8 @@ package
 		public var avatar:FlxSprite;
 		public var monster:FlxSprite;
 		public var coin:FlxSprite;
+		public var ping:FlxSprite;
+		public var boom:FlxSprite;
 		
 		private var avatarColor:int = 0xffffffff;
 		private var avatarSpeed:int = 60;
@@ -53,12 +57,14 @@ package
 		private var coinColor:int = 0xffffffff;
 		private var coinType:int = 0;
 		
+		private var pingColor:int = 0xffffffff;
+		
 				
 		override public function create():void
 		{
 			FlxG.bgColor = 0xff101010;
 			
-			TxtDescription = new FlxText(20,FlxG.height/2-70,FlxG.width-40,"''A silent game where you gain more sound by finding items throughout the game''\n- Qdead");
+			TxtDescription = new FlxText(20,FlxG.height/2-70,FlxG.width-40,"A silent game where you gain more sound by finding items throughout the game\n- Qdead");
 			TxtDescription.alignment = "center";
 			TxtDescription.size = 16;
 			add(TxtDescription);			
@@ -106,8 +112,30 @@ package
 			
 			add(coin);
 			
+			
+			ping = new FlxSprite(coin.x,coin.y,ImgPing);
+			ping.color = pingColor;
+			
+			ping.velocity.x = -5;
+			ping.velocity.y = -15;
+			
+			
+			add(ping);
+			
 			coinTimer = new FlxTimer();
 			coinTimer.start(0.1,1);
+			
+			
+			boom = new FlxSprite(-200,-200,ImgBoom);
+			boom.color = 0xffffff00;
+			
+			
+			boom.scale = new FlxPoint(1,1);
+			
+			boom.moves = false;
+			
+			
+			add(boom);
 		}
 
 		
@@ -119,6 +147,7 @@ package
 			var avatarMoved:Boolean = false;
 			var coinVolume:Number;
 			var monsterVolume:Number;
+			
 			
 			avatar.velocity.x = 0;
 			avatar.velocity.y = 0;
@@ -195,6 +224,9 @@ package
 					monster.y = 10+FlxG.random()*(FlxG.height-20);
 					FlxG.score--;
 					FlxG.play(SndPush);
+					boom.scale = new FlxPoint(1,1);
+					boom.x = avatar.x;
+					boom.y = avatar.y;
 				} else {
 					FlxG.play(SndNo);
 				}
@@ -214,6 +246,8 @@ package
 					else
 						FlxG.play(SndCoinRL,coinVolume,false,true); 
 				}
+				ping.x = coin.x;
+				ping.y = coin.y;
 				coinTimer.start(2*FlxU.getDistance(coin.getMidpoint(),avatar.getMidpoint())/FlxG.height,1);
 			}
 			
@@ -236,11 +270,12 @@ package
 				avatar.maxVelocity.y = avatarSpeed*avatarPace;	
 
 				if (FlxG.score > 4)
-					TxtDescription.text = "''Items could give you a sonic attack.''\n- Knod";	
+					TxtDescription.text = "Items could give you a sonic attack.\n- Knod\n\n[SPACE] reduces score";	
 				if (FlxG.score > 5) {
 					avatar.color = FlxU.makeColor(FlxU.getRGBA(avatarColor)[0]*(10-FlxG.score)/5,FlxU.getRGBA(avatarColor)[1]*(10-FlxG.score)/5,FlxU.getRGBA(avatarColor)[2]*(10-FlxG.score)/5);
 					monster.color = FlxU.makeColor(FlxU.getRGBA(monsterColor)[0]*(10-FlxG.score)/5,FlxU.getRGBA(monsterColor)[1]*(10-FlxG.score)/5,FlxU.getRGBA(monsterColor)[2]*(10-FlxG.score)/5);
 					coin.color = FlxU.makeColor(FlxU.getRGBA(coinColor)[0]*(10-FlxG.score)/5,FlxU.getRGBA(coinColor)[1]*(10-FlxG.score)/5,FlxU.getRGBA(coinColor)[2]*(10-FlxG.score)/5);
+					ping.color = FlxU.makeColor(FlxU.getRGBA(pingColor)[0]*(10-FlxG.score)/5,FlxU.getRGBA(pingColor)[1]*(10-FlxG.score)/5,FlxU.getRGBA(pingColor)[2]*(10-FlxG.score)/5);
 				}
 				if (FlxG.score > 7) {
 					TxtDescription.text = "Speed could be another item advantage.\n\n- Knod"
@@ -257,12 +292,19 @@ package
 					avatar.color = FlxG.bgColor;
 					monster.color = FlxG.bgColor;
 					coin.color = FlxG.bgColor;
+					ping.color = FlxG.bgColor;
+					TxtDescription.text = "The game is primarily visual, but is also playable by visually impaired players.\n\n- GGJ 2015 Diversifier";
 				}
 	
 				
 			}
 
-			
+			if (boom.scale.x < 20) {				
+				boom.scale = new FlxPoint(boom.scale.x*1.1,boom.scale.y*1.1);
+			} else {
+				boom.x = -200;
+				boom.y = -200;
+			}
 			
 			super.update();
 			
